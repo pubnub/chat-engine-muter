@@ -52,21 +52,9 @@ describe('plugins', function() {
 
     });
 
-    it('should not be muted', function(done) {
-
-        pluginchat.on('message', (payload) => {
-
-            pluginchat.muter.mute(CE.me);
-
-            done();
-
-        });
-
-        pluginchat.emit('message', 'test');
-
-    });
-
     it('should be muted', function(done) {
+
+        pluginchat.mute.mute(CE.me);
 
         pluginchat.on('message2', (payload) => {
             assert.fail();

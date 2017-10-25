@@ -1,4 +1,27 @@
-module.exports = () => {
+/**
+* Blocks all events from a {@link User} from being emitted.
+* @module chat-engine-mute-user
+* @requires {@link ChatEngine}
+*/
+
+/**
+* Bind the plugin to a chat
+* ```js
+* chat = new CE.Chat('bad-chat');
+* chat.plugin(muteUser());
+* ```
+*
+* Mute a specific user
+* ```js
+* let user = new ChatEngine.user('bad-guy');
+* chat.muteUser(user);
+* ```
+*
+* Chat will no longer receive any messages from "bad-guy"
+*
+* @function
+*/
+module.exports = (config = {}) => {
 
     class extension {
 
@@ -6,15 +29,30 @@ module.exports = () => {
             this.muted = {};
         }
 
+        /**
+        * Check if a {@link User} is muted within the {@link Chat}.
+        * @method muteUser"."isMuted
+        * @ceextends Chat
+        */
         isMuted(user) {
             let muted = this.muted[user.uuid] || false;
             return muted;
         }
 
+        /**
+        * Prevent all events emitted from this {@link User} from reaching {@link Chat}.
+        * @method muteUser"."mute
+        * @ceextends Chat
+        */
         mute(user) {
             this.muted[user.uuid] = true;
         }
 
+        /**
+        * Allow events from a {@link User} to be emitted again.
+        * @method muteUser"."unmute
+        * @ceextends Chat
+        */
         unmute(user) {
             this.muted[user.uuid] = false;
         }
@@ -31,9 +69,8 @@ module.exports = () => {
 
     };
 
-    // attach methods to Chat
     return {
-        namespace: 'muter',
+        namespace: 'mute',
         extends: {
             Chat: extension
         },
