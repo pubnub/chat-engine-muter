@@ -29,7 +29,7 @@ describe('connect', function() {
 
     it('should be identified as new user', function(done) {
 
-        CE.connect('robot-tester', {works: true}, 'auth-key');
+        CE.connect('robot-tester' + new Date(), {works: true}, 'auth-key');
 
         CE.on('$.ready', (data) => {
 
@@ -52,22 +52,29 @@ describe('plugins', function() {
 
     });
 
-    it('publish and subscribe hooks should be called', function(done) {
+    it('should not be muted', function(done) {
 
-        pluginchat.on('$.connected', () => {
+        pluginchat.on('message', (payload) => {
 
-            pluginchat.on('message', (payload) => {
+            pluginchat.muter.mute(CE.me);
 
-                // assert.isAbove(payload.data.text.indexOf(success), -1);
-                done();
-
-            });
-
-            pluginchat.emit('message', {
-                text: 'This is some *markdown* **for sure**.'
-            });
+            done();
 
         });
+
+        pluginchat.emit('message', 'test');
+
+    });
+
+    it('should be muted', function(done) {
+
+        pluginchat.on('message2', (payload) => {
+            assert.fail();
+        });
+
+        pluginchat.emit('message2', 'test');
+
+        done();
 
     });
 
