@@ -8,13 +8,13 @@
 * Bind the plugin to a chat
 * ```js
 * chat = new CE.Chat('bad-chat');
-* chat.plugin(muteUser());
+* chat.plugin(muter());
 * ```
 *
 * Mute a specific user
 * ```js
 * let user = new ChatEngine.user('bad-guy');
-* chat.muteUser(user);
+* chat.muteUser.mute(user);
 * ```
 *
 * Chat will no longer receive any messages from "bad-guy"
@@ -31,7 +31,7 @@ module.exports = (config = {}) => {
 
         /**
         * Check if a {@link User} is muted within the {@link Chat}.
-        * @method muteUser"."isMuted
+        * @method muter"."isMuted
         * @ceextends Chat
         */
         isMuted(user) {
@@ -41,7 +41,7 @@ module.exports = (config = {}) => {
 
         /**
         * Prevent all events emitted from this {@link User} from reaching {@link Chat}.
-        * @method muteUser"."mute
+        * @method muter"."mute
         * @ceextends Chat
         */
         mute(user) {
@@ -50,7 +50,7 @@ module.exports = (config = {}) => {
 
         /**
         * Allow events from a {@link User} to be emitted again.
-        * @method muteUser"."unmute
+        * @method muter"."unmute
         * @ceextends Chat
         */
         unmute(user) {
@@ -62,7 +62,11 @@ module.exports = (config = {}) => {
     let muteFilter = (payload, next) => {
 
         if(payload && payload.sender && payload.chat && payload.chat.muter.isMuted(payload.sender)) {
+
+            payload.chat.trigger('$.muter.eventRejected', payload);
+
             next(true); // reject message and stop it from emitting
+
         } else {
             next(null, payload);
         }
@@ -70,7 +74,7 @@ module.exports = (config = {}) => {
     };
 
     return {
-        namespace: 'mute',
+        namespace: 'muter',
         extends: {
             Chat: extension
         },
