@@ -1,41 +1,28 @@
-# Unread Messages Plugin
+# Mute Plugin for Chat Engine
 
-Adds the ability to count unread messages in a ChatEngine Chat
+Adds the ability to mute a user in a ChatEngine Chat
 
 ### Quick Start
 
-0. Have ChatEngine instantiated and connected, and have a channel you want to count unread messages on
+0. Have a ChatEngine server running already, instantiate a client and connect it
 ```js
 const ChatEngine = ChatEngineCore.create({
     publishKey: 'pub-key-here',
-    subscribeKey: 'sub-key-here',
-}, {
-    endpoint: 'http://chatengine:server/',
-    globalChannel: 'global-channel-name'
+    subscribeKey: 'sub-key-here'
 });
 
 ChatEngine.connect('Username');
-ChatEngine.on('$.ready', () => { ... });
+ChatEngine.on('$ready', () => { ... });
 ```
 
 1. Attach this plugin to the channel you want, in this case global
 ```js
-ChatEngine.global.plugin(ChatEngineCore.plugin['chat-engine-unread-messages']());
+ChatEngine.global.plugin(ChatEngineCore.plugin['chat-engine-mute']());
 ```
 
-2. The plugin needs to be notified when the user is considered active or inactive to properly count messages
+2. Pass a user object to the plugin
 ```js
-// sets unreadCount to 0, stops counting unread messages and stops emitting events
-ChatEngine.global.unreadMessages.active();
-```
-```js
-// starts counting unread messages and starts emitting events - default state
-ChatEngine.global.unreadMessages.inactive();
+let user = ChatEngine.global.users['user-uuid'];
+ChatEngine.global.mute(user);
 ```
 
-3. Listen for the `$unread` events that emit whenever your channel recieves a message while it is marked as inactive
-```js
-ChatEngine.global.on('$unread', () => {
-    console.log(ChatEngine.global.unreadCount);
-});
-```
