@@ -1,25 +1,24 @@
 /**
-* Blocks all events from a {@link User} from being emitted.
-* @module chat-engine-mute-user
+* Prevent a {@link Chat} from emitting events from a specific {@link User}.
+* @module chat-engine-mute
 * @requires {@link ChatEngine}
 */
 
 /**
-* Bind the plugin to a chat
-* ```js
-* chat = new CE.Chat('bad-chat');
-* chat.plugin(muter());
-* ```
-*
-* Mute a specific user
-* ```js
-* let user = new ChatEngine.user('bad-guy');
-* chat.muteUser.mute(user);
-* ```
-*
-* Chat will no longer receive any messages from "bad-guy"
-*
 * @function
+* @example
+* userObject = chat.users['user-uuid'];
+* chat.plugin(ChatEngineCore.plugin['chat-engine-mute']());
+* 
+* // mute user
+* chat.muter.mute(userObject);
+* 
+* // unmute user
+* chat.muter.unmute(userObject);
+* 
+* // mute status
+* chat.muter.isMuted(userObject);
+* // false
 */
 module.exports = (config = {}) => {
 
