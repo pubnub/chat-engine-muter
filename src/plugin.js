@@ -7,6 +7,7 @@
 /**
 * @function
 * @example
+* userObject = chat.users['user-uuid'];
 * chat.plugin(ChatEngineCore.plugin['chat-engine-mute']());
 * 
 * // mute user
