@@ -1,127 +1,82 @@
-// In this example we are going to be creating two chat clients
-// One will have the unread-messages plugin connected to the global channel
-// The other will not, allowing you to easily see the diff
+// In this example we are going to create a chat client
+// That will let you mute and unmute yourself
+// (useful, I know)
+const YOUR_PUBLISH_KEY = '';
+const YOUR_SUBSCRIBE_KEY = '';
 
-// get some references to functions
-let rickSend = function () {};
-let rickSubmit = function () {};
-let rickActive = function () {};
-let rickInactive = function () {};
-let mortySend = function () {};
-let mortySubmit = function () {};
+// just making sure you're paying attention
+if (YOUR_PUBLISH_KEY === '' || YOUR_SUBSCRIBE_KEY === '') {
+    alert('You forgot to enter your keys');
+}
 
-// here we are creating two instances of chat-engine
-// typically you will not do this more than once in a client side app,
-// but we're having two users use the same page here
-const rickClient = ChatEngineCore.create({
-    publishKey: 'pub-c-c2a407d1-2771-4d22-9063-bd538c8d720f',
-    subscribeKey: 'sub-c-72ef270e-c41a-11e7-8c2e-7612aca27832'
+//    ________          __  ______            _          
+//   / ____/ /_  ____ _/ /_/ ____/___  ____ _(_)___  ___ 
+//  / /   / __ \/ __ `/ __/ __/ / __ \/ __ `/ / __ \/ _ \
+// / /___/ / / / /_/ / /_/ /___/ / / / /_/ / / / / /  __/
+// \____/_/ /_/\__,_/\__/_____/_/ /_/\__, /_/_/ /_/\___/ 
+//                                  /____/               
+
+// get a function reference
+let toggleMute = function () {};
+let speaker = {};
+
+const ChatEngine = ChatEngineCore.create({
+    publishKey: YOUR_PUBLISH_KEY,
+    subscribeKey: YOUR_SUBSCRIBE_KEY
 });
 
-const mortyClient = ChatEngineCore.create({
-    publishKey: 'pub-c-c2a407d1-2771-4d22-9063-bd538c8d720f',
-    subscribeKey: 'sub-c-72ef270e-c41a-11e7-8c2e-7612aca27832'
-});
+// connect ourselves to the network, and when it is successful, do some stuff
+ChatEngine.connect('Username');
 
-// connect Rick to the network, and when it is successful, do some stuff
-rickClient.connect('Rick');
-
-rickClient.on('$.ready', () => {
-
+ChatEngine.on('$.ready', (data) => {
+    
     // * * * * *  start plugin specific code  * * * * *
 
-    // attach the unread-messages plugin to the global channel for Rick
-    rickClient.global.plugin(ChatEngineCore.plugin['chat-engine-unread-messages']());
-
-    // mark rick as active, then update his UI element to show he has no unread messages
-    rickActive = function () {
-
-        rickClient.global.unreadMessages.active();
-        $('#rick-count').html(rickClient.global.unreadCount || '');
-
-    };
-
-    // mark rick as inactive, which will notify the plugin to start counting again
-    rickInactive = function () {
-
-        rickClient.global.unreadMessages.inactive();
-
-    };
-
-    // when the plugin emits an unread event, update the UI element
-    // bootstap automagically makes it go away if it's '' instead of 0
-    rickClient.global.on('$unread', (payload) => {
-
-        console.log(payload)
-
-        console.log(payload.sender)
-
-        $('#rick-count').html(rickClient.global.unreadCount || '');
-
-    });
+    ChatEngine.global.plugin(ChatEngineCore.plugin['chat-engine-mute']());
 
     // * * * * *  end plugin specific code  * * * * *
+    
+    toggleMute = function () {
+        // get the user object of the uuid 'JarJar' from the global chat
+    	let user = ChatEngine.global.users['JarJar'];
 
-    // use rick's input box value as his message payload and clear it when you hit send
-    rickSend = function () {
+        // check to see the mute state of our target user
+    	if (ChatEngine.global.muter.isMuted(user)) {
 
-        rickClient.global.emit('message', {
-            text: $('#rick-input').val()
-        });
+            // unmute user in global chat
+    		ChatEngine.global.muter.unmute(user);
+            dummyOn();
 
-        $('#rick-input').val('');
+    	} else {
 
-        return false;
+            // mute user in global chat
+    		ChatEngine.global.muter.mute(user);
+            dummyOff();
+
+    	}
 
     };
 
-    // hook up the enter key for maximum usability
-    rickSubmit = function (e) {
+    // when any message is emitted on the global channel add it to the chat log
+    ChatEngine.global.on('message', (payload) => {
 
-        if (e.keyCode === 13) {
-            rickSend();
-        }
-    };
-
-    // when any message is emitted on the global channel add it to rick's chat log
-    rickClient.global.on('message', (payload) => {
-
-        $('#rick-output').append($('<p><strong>' + payload.sender.uuid + ':</strong> ' + payload.data.text + '</p>'));
+        $('#output').append($('<p><strong>' + payload.sender.uuid + ':</strong> ' + payload.data.text + '</p>'));
 
     });
 
 });
 
-// connect Morty to the network, and when it is successful, do less stuff
-mortyClient.connect('Morty');
-mortyClient.on('$.ready', () => {
 
-    // use morty's input box value as his message payload and clear it when you hit send
-    mortySend = function () {
+// turn the dummy off when he's muted to keep errors out of the console
+function dummyOff () {
+    clearInterval(speaker);
+    $('#submit').html('Unmute');
+}
 
-        mortyClient.global.emit('message', {
-            text: $('#morty-input').val()
-        });
+// turn the dummy back on when he's unmuted
+function dummyOn () {
+    speaker = setInterval(speak, 1000);
+    $('#submit').html('Mute');
+}
 
-        $('#morty-input').val('');
 
-        return false;
-
-    };
-
-    // hook up the enter key for maximum usability
-    mortySubmit = function (e) {
-
-        if (e.keyCode === 13) {
-            mortySend();
-        }
-    };
-
-    // when any message is emitted on the global channel add it to rick's chat log
-    mortyClient.global.on('message', (payload) => {
-
-        $('#morty-output').append($('<p><strong>' + payload.sender.uuid + ':</strong> ' + payload.data.text + '</p>'));
-
-    });
-
-});

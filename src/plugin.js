@@ -13,7 +13,7 @@
 * chat.muter.mute(userObject);
 * 
 * // unmute user
-* chat.muter.unMute(userObject);
+* chat.muter.unmute(userObject);
 * 
 * // mute status
 * chat.muter.isMuted(userObject);

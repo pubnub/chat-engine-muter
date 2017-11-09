@@ -12,7 +12,7 @@ const ChatEngine = ChatEngineCore.create({
 });
 
 ChatEngine.connect('Username');
-ChatEngine.on('$ready', () => { ... });
+ChatEngine.on('$.ready', () => { ... });
 ```
 
 1. Attach this plugin to the channel you want, in this case global
@@ -20,9 +20,19 @@ ChatEngine.on('$ready', () => { ... });
 ChatEngine.global.plugin(ChatEngineCore.plugin['chat-engine-mute']());
 ```
 
-2. Pass a user object to the plugin
+2. Pass a user object to the muter to mute a user
 ```js
 let user = ChatEngine.global.users['user-uuid'];
-ChatEngine.global.mute(user);
+ChatEngine.global.muter.mute(user);
+console.log(ChatEngine.global.muter.isMuted(user));
+// true
+```
+
+3. Pass a user object to the muter to unmute a user
+```js
+let user = ChatEngine.global.users['user-uuid'];
+ChatEngine.global.muter.umute(user);
+console.log(ChatEngine.global.muter.isMuted(user));
+// false
 ```
 
