@@ -1,4 +1,4 @@
-# Mute Plugin for Chat Engine
+# Mute Plugin for ChatEngine
 
 Adds the ability to mute a user in a ChatEngine Chat
 
