@@ -63,9 +63,6 @@ describe('plugins', function() {
 
         pluginchat.muter.mute(CE.me);
 
-        // pluginchat.onAny((a) => {
-        //     console.log(a.event)
-        // });
 
         pluginchat.once('message2', (payload) => {
             assert.fail();
@@ -76,8 +73,6 @@ describe('plugins', function() {
         });
 
         setInterval(() => {
-
-            console.log('emitting')
 
             pluginchat.emit('message2', {
                 text: 'test'
