@@ -1,10 +1,10 @@
 {
   "author": "Ian Jennings",
   "name": "chat-engine-muter",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "src/plugin.js",
   "dependencies": {
-    "chat-engine": "^0.8.3"
+    "chat-engine": "^0.8.4"
   },
   "devDependencies": {
     "chai": "^4.1.2",

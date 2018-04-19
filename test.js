@@ -2,7 +2,7 @@
 const assert = require('chai').assert;
 const mute = require('./src/plugin.js');
 
-const ChatEngine = require('../chat-engine/src/index.js');
+const ChatEngine = require('./node_modules/chat-engine/src/index.js');
 
 let pluginchat;
 let CE;
@@ -51,21 +51,39 @@ describe('plugins', function() {
         pluginchat.plugin(mute({}));
         pluginchat2.plugin(mute({}));
 
+        pluginchat.on('$.ready', () => {
+            done();
+        });
+
     });
 
     it('should be muted', function(done) {
 
+        this.timeout(30000);
+
         pluginchat.muter.mute(CE.me);
 
-        pluginchat.on('message2', (payload) => {
+        // pluginchat.onAny((a) => {
+        //     console.log(a.event)
+        // });
+
+        pluginchat.once('message2', (payload) => {
             assert.fail();
         });
 
-        pluginchat.on('$.muter.eventRejected', (payload) => {
+        pluginchat.once('$.muter.eventRejected', (payload) => {
             done();
         });
 
-        pluginchat.emit('message2', 'test');
+        setInterval(() => {
+
+            console.log('emitting')
+
+            pluginchat.emit('message2', {
+                text: 'test'
+            });
+
+        }, 1000);
 
     });
 

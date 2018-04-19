@@ -9,13 +9,13 @@
 * @example
 * userObject = chat.users['user-uuid'];
 * chat.plugin(ChatEngineCore.plugin['chat-engine-mute']());
-* 
+*
 * // mute user
 * chat.muter.mute(userObject);
-* 
+*
 * // unmute user
 * chat.muter.unmute(userObject);
-* 
+*
 * // mute status
 * chat.muter.isMuted(userObject);
 * // false
@@ -60,9 +60,19 @@ module.exports = (config = {}) => {
 
     let muteFilter = (payload, next) => {
 
-        if(payload && payload.sender && payload.chat && payload.chat.muter.isMuted(payload.sender)) {
+        let isOwnEvent = false;
 
-            payload.chat.trigger('$.muter.eventRejected', payload);
+        if(payload && payload.event && payload.event.indexOf('$.muter') > -1) {
+            isOwnEvent = true;
+        }
+
+        if(!isOwnEvent && payload && payload.sender && payload.chat && payload.chat.muter && payload.chat.muter.isMuted(payload.sender)) {
+
+            payload.chat.trigger('$.muter.eventRejected', {
+                originalEvent: payload.event,
+                sender: payload.sender.uuid,
+                chat: payload.chat.objectify()
+            });
 
             next(true); // reject message and stop it from emitting
 
@@ -76,7 +86,8 @@ module.exports = (config = {}) => {
         namespace: 'muter',
         extends: {
             Chat: extension
-        },
+        }
+        ,
         middleware: {
             on: {
                 '*': muteFilter
