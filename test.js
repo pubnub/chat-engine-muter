@@ -2,7 +2,7 @@
 const assert = require('chai').assert;
 const mute = require('./src/plugin.js');
 
-const ChatEngine = require('../chat-engine/src/index.js');
+const ChatEngine = require('./node_modules/chat-engine/src/index.js');
 
 let pluginchat;
 let CE;
@@ -12,11 +12,8 @@ describe('config', function() {
     it('should be configured', function() {
 
         CE = ChatEngine.create({
-            publishKey: 'pub-c-c6303bb2-8bf8-4417-aac7-e83b52237ea6',
-            subscribeKey: 'sub-c-67db0e7a-50be-11e7-bf50-02ee2ddab7fe',
-        }, {
-            endpoint: 'http://localhost:3000/insecure',
-            globalChannel: 'test-channel'
+            publishKey: 'pub-c-01491c54-379f-4d4a-b20b-9a03c24447c7',
+            subscribeKey: 'sub-c-eaf4a984-4356-11e8-91e7-8ad1b2d46395',
         });
 
         assert.isOk(CE);
@@ -29,7 +26,9 @@ describe('connect', function() {
 
     it('should be identified as new user', function(done) {
 
-        CE.connect('robot-tester' + new Date(), {works: true}, 'auth-key');
+        this.timeout(10000);
+
+        CE.connect('robot-tester' + new Date().getTime(), {works: true}, 'auth-key');
 
         CE.on('$.ready', (data) => {
 
@@ -52,21 +51,34 @@ describe('plugins', function() {
         pluginchat.plugin(mute({}));
         pluginchat2.plugin(mute({}));
 
+        pluginchat.on('$.ready', () => {
+            done();
+        });
+
     });
 
     it('should be muted', function(done) {
 
+        this.timeout(30000);
+
         pluginchat.muter.mute(CE.me);
 
-        pluginchat.on('message2', (payload) => {
+
+        pluginchat.once('message2', (payload) => {
             assert.fail();
         });
 
-        pluginchat.on('$.muter.eventRejected', (payload) => {
+        pluginchat.once('$.muter.eventRejected', (payload) => {
             done();
         });
 
-        pluginchat.emit('message2', 'test');
+        setInterval(() => {
+
+            pluginchat.emit('message2', {
+                text: 'test'
+            });
+
+        }, 1000);
 
     });
 
