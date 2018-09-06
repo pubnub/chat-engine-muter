@@ -11,13 +11,17 @@ const ChatEngine = ChatEngineCore.create({
     subscribeKey: 'sub-key-here'
 });
 
+var me;
+
 ChatEngine.connect('Username');
-ChatEngine.on('$.ready', () => { ... });
+ChatEngine.on('$.ready', (data) => {
+    me = data.me;
+});
 ```
 
 1. Attach this plugin to the channel you want, in this case global
 ```js
-ChatEngine.global.plugin(ChatEngineCore.plugin['chat-engine-mute']());
+ChatEngine.global.plugin(ChatEngineCore.plugin['chat-engine-mute']({ me: me }));
 ```
 
 2. Pass a user object to the muter to mute a user
