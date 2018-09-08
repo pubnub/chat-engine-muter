@@ -22,58 +22,58 @@
  */
 module.exports = (config = {}) => {
     class extension {
-      /**
-       * Check if a {@link User} is muted within the {@link Chat}.
-       * @method muter"."isMuted
-       * @ceextends Chat
-       */
-      isMuted(user) {
-          let state = this.parent.meta;
+        /**
+        * Check if a {@link User} is muted within the {@link Chat}.
+        * @method muter"."isMuted
+        * @ceextends Chat
+        */
+        isMuted(user) {
+            let state = this.parent.meta;
 
-          if (state && state.muted && state.muted[config.me.uuid] && state.muted[config.me.uuid].indexOf(user.uuid) >= 0) {
-              return true;
-          } else {
-              return false;
-          }
-      }
+            if (state && state.muted && state.muted[config.me.uuid] && state.muted[config.me.uuid].indexOf(user.uuid) >= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
-      /**
-       * Prevent all events emitted from this {@link User} from reaching {@link Chat}.
-       * @method muter"."mute
-       * @ceextends Chat
-       */
-      mute(user) {
-          let state = this.parent.meta || {};
+        /**
+         * Prevent all events emitted from this {@link User} from reaching {@link Chat}.
+         * @method muter"."mute
+         * @ceextends Chat
+         */
+        mute(user) {
+            let state = this.parent.meta || {};
 
-          if (!state.muted) {
-              state.muted = {};
-          }
+            if (!state.muted) {
+                state.muted = {};
+            }
 
-          if (!state.muted[config.me.uuid]) {
-              state.muted[config.me.uuid] = [];
-          }
+            if (!state.muted[config.me.uuid]) {
+                state.muted[config.me.uuid] = [];
+            }
 
-          state.muted[config.me.uuid].push(user.uuid);
+            state.muted[config.me.uuid].push(user.uuid);
 
-          this.parent.update(state);
-      }
+            this.parent.update(state);
+        }
 
-      /**
-       * Allow events from a {@link User} to be emitted again.
-       * @method muter"."unmute
-       * @ceextends Chat
-       */
-      unmute(user) {
-          let state = this.parent.meta;
+        /**
+         * Allow events from a {@link User} to be emitted again.
+         * @method muter"."unmute
+         * @ceextends Chat
+         */
+        unmute(user) {
+            let state = this.parent.meta;
 
-          if (state.muted && state.muted[config.me.uuid] && state.muted[config.me.uuid].indexOf(user.uuid) >= 0) {
-              var index = state.muted[config.me.uuid].indexOf(user.uuid);
+            if (state.muted && state.muted[config.me.uuid] && state.muted[config.me.uuid].indexOf(user.uuid) >= 0) {
+                var index = state.muted[config.me.uuid].indexOf(user.uuid);
 
-              state.muted[config.me.uuid].splice(index, 1);
+                state.muted[config.me.uuid].splice(index, 1);
 
-              this.parent.update(state);
-          }
-      }
+                this.parent.update(state);
+            }
+        }
     };
 
     let muteFilter = (payload, next) => {
@@ -83,7 +83,8 @@ module.exports = (config = {}) => {
             isOwnEvent = true;
         }
 
-        if(!isOwnEvent && payload && payload.sender && payload.chat && payload.chat.muter && payload.chat.muter.isMuted(payload.sender)) {
+        if(!isOwnEvent && payload && payload.sender && payload.chat && payload.chat.muter
+          && payload.chat.muter.isMuted(payload.sender)) {
 
             payload.chat.trigger('$.muter.eventRejected', {
                 originalEvent: payload.event,
@@ -101,12 +102,12 @@ module.exports = (config = {}) => {
     return {
         namespace: 'muter',
         extends: {
-          Chat: extension
+            Chat: extension
         },
         middleware: {
-          on: {
-            '*': muteFilter
-          }
+            on: {
+                '*': muteFilter
+            }
         }
     }
 }
