@@ -33,9 +33,9 @@ module.exports = (config = {}) => {
             if (state && state.muted && state.muted[config.me.uuid]
               && state.muted[config.me.uuid].indexOf(user.uuid) >= 0) {
                 return true;
-            } else {
-                return false;
             }
+
+            return false;
         }
 
         /**
