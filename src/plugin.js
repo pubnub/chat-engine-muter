@@ -30,7 +30,8 @@ module.exports = (config = {}) => {
         isMuted(user) {
             let state = this.parent.meta;
 
-            if (state && state.muted && state.muted[config.me.uuid] && state.muted[config.me.uuid].indexOf(user.uuid) >= 0) {
+            if (state && state.muted && state.muted[config.me.uuid]
+              && state.muted[config.me.uuid].indexOf(user.uuid) >= 0) {
                 return true;
             } else {
                 return false;
@@ -67,7 +68,7 @@ module.exports = (config = {}) => {
             let state = this.parent.meta;
 
             if (state.muted && state.muted[config.me.uuid] && state.muted[config.me.uuid].indexOf(user.uuid) >= 0) {
-                var index = state.muted[config.me.uuid].indexOf(user.uuid);
+                let index = state.muted[config.me.uuid].indexOf(user.uuid);
 
                 state.muted[config.me.uuid].splice(index, 1);
 
@@ -83,7 +84,7 @@ module.exports = (config = {}) => {
             isOwnEvent = true;
         }
 
-        if(!isOwnEvent && payload && payload.sender && payload.chat && payload.chat.muter
+        if (!isOwnEvent && payload && payload.sender && payload.chat && payload.chat.muter
           && payload.chat.muter.isMuted(payload.sender)) {
 
             payload.chat.trigger('$.muter.eventRejected', {
