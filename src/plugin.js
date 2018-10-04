@@ -1,4 +1,5 @@
 /**
+* @overview Chat moderation sometimes requires *muting* or *banning* users. The ChatEngine muter adds the ability to **mute** a user in an object. <br> <img src="plugins/chat-engine-muter/output.gif" height="375"></img> <br>
 * Prevent a {@link Chat} from emitting events from a specific {@link User}.
 * @module chat-engine-mute
 * @requires {@link ChatEngine}
