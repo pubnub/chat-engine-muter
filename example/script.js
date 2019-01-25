@@ -1,20 +1,20 @@
 // In this example we are going to create a chat client
 // That will let you mute and unmute yourself
 // (useful, I know)
-const YOUR_PUBLISH_KEY = '';
-const YOUR_SUBSCRIBE_KEY = '';
+const YOUR_PUBLISH_KEY = 'pub-c-d8599c43-cecf-42ba-a72f-aa3b24653c2b';
+const YOUR_SUBSCRIBE_KEY = 'sub-c-6c6c021c-c4e2-11e7-9628-f616d8b03518';
 
 // just making sure you're paying attention
 if (YOUR_PUBLISH_KEY === '' || YOUR_SUBSCRIBE_KEY === '') {
     alert('You forgot to enter your keys');
 }
 
-//    ________          __  ______            _          
-//   / ____/ /_  ____ _/ /_/ ____/___  ____ _(_)___  ___ 
+//    ________          __  ______            _
+//   / ____/ /_  ____ _/ /_/ ____/___  ____ _(_)___  ___
 //  / /   / __ \/ __ `/ __/ __/ / __ \/ __ `/ / __ \/ _ \
 // / /___/ / / / /_/ / /_/ /___/ / / / /_/ / / / / /  __/
-// \____/_/ /_/\__,_/\__/_____/_/ /_/\__, /_/_/ /_/\___/ 
-//                                  /____/               
+// \____/_/ /_/\__,_/\__/_____/_/ /_/\__, /_/_/ /_/\___/
+//                                  /____/
 
 // get a function reference
 let toggleMute = function () {};
@@ -29,13 +29,13 @@ const ChatEngine = ChatEngineCore.create({
 ChatEngine.connect('Username');
 
 ChatEngine.on('$.ready', (data) => {
-    
+
     // * * * * *  start plugin specific code  * * * * *
 
-    ChatEngine.global.plugin(ChatEngineCore.plugin['chat-engine-mute']());
+    ChatEngine.global.plugin(ChatEngineCore.plugin['chat-engine-muter']());
 
     // * * * * *  end plugin specific code  * * * * *
-    
+
     toggleMute = function () {
         // get the user object of the uuid 'JarJar' from the global chat
     	let user = ChatEngine.global.users['JarJar'];
@@ -78,5 +78,3 @@ function dummyOn () {
     speaker = setInterval(speak, 1000);
     $('#submit').html('Mute');
 }
-
-

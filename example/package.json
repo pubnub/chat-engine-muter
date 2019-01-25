@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "chat-engine": "^0.8.3",
-    "chat-engine-mute": "0.0.2",
+    "chat-engine-muter": "0.0.4",
     "express": "^4.16.1",
     "http-server": "^0.10.0"
   }
