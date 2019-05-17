@@ -1,8 +1,8 @@
 // In this example we are going to create a chat client
 // That will let you mute and unmute yourself
 // (useful, I know)
-const YOUR_PUBLISH_KEY = 'pub-c-d8599c43-cecf-42ba-a72f-aa3b24653c2b';
-const YOUR_SUBSCRIBE_KEY = 'sub-c-6c6c021c-c4e2-11e7-9628-f616d8b03518';
+const YOUR_PUBLISH_KEY = '';
+const YOUR_SUBSCRIBE_KEY = '';
 
 // just making sure you're paying attention
 if (YOUR_PUBLISH_KEY === '' || YOUR_SUBSCRIBE_KEY === '') {
